@@ -1,0 +1,12 @@
+tags
+test.sh
+.luarc.json
+nvim
+
+spell/
+lazy-lock.json
+
+mason/
+compiler/
+debugpy/
+doc/
