@@ -3,6 +3,10 @@ vim.g.maplocalleader = ' '
 
 local opt = vim.opt
 
+
+opt.tabstop = 2
+opt.shiftwidth = 2
+opt.expandtab = true
 -- Make line numbers default
 opt.number = true
 -- You can also add relative line numbers, to help with jumping.
@@ -61,6 +65,9 @@ opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 opt.scrolloff = 10
+
+-- For vim nofity
+opt.termguicolors = true
 
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
