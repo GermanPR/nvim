@@ -1,0 +1,1 @@
+/home/germanpr/.config/omarchy/current/theme/neovim.lua
