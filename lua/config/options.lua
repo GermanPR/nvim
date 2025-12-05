@@ -9,3 +9,4 @@ vim.opt.cmdheight = 0 -- Hide command line when not in use
 vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.writebackup = false
+vim.opt.wrap = true

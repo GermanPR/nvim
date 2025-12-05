@@ -73,3 +73,37 @@ vim.diagnostic.config({
   severity_sort = true,
   update_in_insert = false,
 })
+
+-- Git diff highlights with blend (see syntax colors through diff background)
+-- Dynamically uses theme colors and reapplies on colorscheme change
+local function get_hl_bg(name)
+  local hl = vim.api.nvim_get_hl(0, { name = name, link = false })
+  return hl.bg and string.format("#%06x", hl.bg) or nil
+end
+
+local function apply_diff_blend()
+  local add_bg = get_hl_bg("DiffAdd") or "#2d4f2d"
+  local del_bg = get_hl_bg("DiffDelete") or "#4f2d2d"
+  local chg_bg = get_hl_bg("DiffChange") or "#4f4f2d"
+
+  vim.api.nvim_set_hl(0, "DiffAdd", { bg = add_bg, blend = 30 })
+  vim.api.nvim_set_hl(0, "DiffDelete", { bg = del_bg, blend = 30 })
+  vim.api.nvim_set_hl(0, "DiffChange", { bg = chg_bg, blend = 30 })
+  vim.api.nvim_set_hl(0, "DiffText", { bg = chg_bg, blend = 20 })
+
+  -- Diffview-specific overrides
+  vim.api.nvim_set_hl(0, "DiffviewDiffAdd", { bg = add_bg, blend = 30 })
+  vim.api.nvim_set_hl(0, "DiffviewDiffDelete", { bg = del_bg, blend = 30 })
+  vim.api.nvim_set_hl(0, "DiffviewDiffChange", { bg = chg_bg, blend = 30 })
+end
+
+-- Apply on colorscheme change
+vim.api.nvim_create_autocmd("ColorScheme", {
+  callback = function()
+    vim.defer_fn(apply_diff_blend, 10)
+  end,
+})
+
+-- Apply now
+apply_diff_blend()
+vim.opt.fillchars:append("diff:=")

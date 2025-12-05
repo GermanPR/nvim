@@ -2,7 +2,7 @@ return {
   "nvim-lualine/lualine.nvim",
   opts = function(_, opts)
     opts.options = opts.options or {}
-    opts.options.globalstatus = true
+    opts.options.globalstatus = false
 
     -- Clear bottom statusline
     opts.sections = {

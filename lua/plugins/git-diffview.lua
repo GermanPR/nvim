@@ -36,7 +36,8 @@ return {
               if vim.v.shell_error == 0 then
                 vim.notify("Checked out PR #" .. pr_number, vim.log.levels.INFO)
                 -- Get the base branch for the PR
-                local base_branch = vim.fn.system(string.format("gh pr view %s --json baseRefName -q .baseRefName", pr_number))
+                local base_branch =
+                  vim.fn.system(string.format("gh pr view %s --json baseRefName -q .baseRefName", pr_number))
                 base_branch = vim.trim(base_branch)
                 -- Open diffview comparing with base branch
                 vim.cmd("DiffviewOpen " .. base_branch)
@@ -53,7 +54,9 @@ return {
         "<leader>gpl",
         function()
           -- Use Snacks picker to show list of PRs
-          local prs = vim.fn.systemlist("gh pr list --json number,title,headRefName --jq '.[] | \"#\\(.number) - \\(.title) (\\(.headRefName))\"'")
+          local prs = vim.fn.systemlist(
+            "gh pr list --json number,title,headRefName --jq '.[] | \"#\\(.number) - \\(.title) (\\(.headRefName))\"'"
+          )
 
           if vim.v.shell_error ~= 0 or #prs == 0 then
             vim.notify("No PRs found or gh CLI not available", vim.log.levels.WARN)
@@ -73,7 +76,8 @@ return {
                 if vim.v.shell_error == 0 then
                   vim.notify("Checked out PR #" .. pr_number, vim.log.levels.INFO)
                   -- Get the base branch for the PR
-                  local base_branch = vim.fn.system(string.format("gh pr view %s --json baseRefName -q .baseRefName", pr_number))
+                  local base_branch =
+                    vim.fn.system(string.format("gh pr view %s --json baseRefName -q .baseRefName", pr_number))
                   base_branch = vim.trim(base_branch)
                   -- Open diffview comparing with base branch
                   vim.cmd("DiffviewOpen " .. base_branch)
