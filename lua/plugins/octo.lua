@@ -1,5 +1,5 @@
 return {
-  -- octo.nvim - GitHub PR comments and reviews
+  -- octo.nvim - GitHub PR management (list, review, comment, approve)
   {
     "pwntester/octo.nvim",
     dependencies = {
@@ -9,7 +9,60 @@ return {
     },
     event = "VeryLazy",
     keys = {
-      -- Open current PR for commenting
+      -- ============================================
+      -- PR Listing & Navigation
+      -- ============================================
+      -- List all PRs
+      { "<leader>gpl", "<cmd>Octo pr list<cr>", desc = "PR: List All" },
+      -- My PRs (author @me)
+      {
+        "<leader>gpm",
+        function()
+          local my_prs = vim.fn.systemlist(
+            'gh pr list --author @me --json number,title,reviewDecision --jq \'.[] | "#\\(.number) - \\(.title) [\\(.reviewDecision // "PENDING")]"\''
+          )
+          if vim.v.shell_error ~= 0 or #my_prs == 0 or my_prs[1] == "" then
+            vim.notify("You have no open PRs", vim.log.levels.INFO)
+            return
+          end
+          vim.ui.select(my_prs, { prompt = "My PRs:" }, function(selected)
+            if selected then
+              local pr_number = selected:match("#(%d+)")
+              if pr_number then
+                vim.cmd("Octo pr edit " .. pr_number)
+              end
+            end
+          end)
+        end,
+        desc = "PR: My PRs",
+      },
+      -- PRs needing my review
+      {
+        "<leader>gpn",
+        function()
+          local prs = vim.fn.systemlist(
+            'gh pr list --search "review-requested:@me" --json number,title,author --jq \'.[] | "#\\(.number) - \\(.title) (by @\\(.author.login))"\''
+          )
+          if vim.v.shell_error ~= 0 or #prs == 0 or prs[1] == "" then
+            vim.notify("No PRs need your review!", vim.log.levels.INFO)
+            return
+          end
+          vim.ui.select(prs, { prompt = "PRs needing review:" }, function(selected)
+            if selected then
+              local pr_number = selected:match("#(%d+)")
+              if pr_number then
+                vim.cmd("Octo pr edit " .. pr_number)
+              end
+            end
+          end)
+        end,
+        desc = "PR: Needing My Review",
+      },
+
+      -- ============================================
+      -- PR Actions
+      -- ============================================
+      -- Open current branch's PR in Octo
       {
         "<leader>gpo",
         function()
@@ -21,10 +74,8 @@ return {
           end
           vim.cmd("Octo pr edit " .. pr_number)
         end,
-        desc = "Open PR in Octo",
+        desc = "PR: Open in Octo",
       },
-      -- List PRs
-      { "<leader>op", "<cmd>Octo pr list<cr>", desc = "List PRs Octo" },
       -- Open PR in browser
       {
         "<leader>gpw",
@@ -37,23 +88,55 @@ return {
           end
           vim.fn.system("gh pr view " .. pr_number .. " --web")
         end,
-        desc = "Open PR in Browser",
+        desc = "PR: Open in Browser",
       },
-      -- Add comment (when in octo buffer or on a line in review)
-      { "<leader>gpc", "<cmd>Octo comment add<cr>", desc = "Add Comment" },
-      -- Resolve/unresolve threads
-      { "<leader>gpr", "<cmd>Octo thread resolve<cr>", desc = "Resolve Thread" },
-      { "<leader>gpu", "<cmd>Octo thread unresolve<cr>", desc = "Unresolve Thread" },
-      -- Review management
-      { "<leader>gpt", "<cmd>Octo review start<cr>", desc = "Start Review" },
-      { "<leader>gps", "<cmd>Octo review submit<cr>", desc = "Submit Review" },
-      { "<leader>gpd", "<cmd>Octo review discard<cr>", desc = "Discard Review" },
-      -- Approve PR
-      { "<leader>gpa", "<cmd>Octo review submit approve<cr>", desc = "Approve PR" },
-      -- Request changes
-      { "<leader>gpx", "<cmd>Octo review submit request_changes<cr>", desc = "Request Changes" },
       -- Reload PR
-      { "<leader>gpl", "<cmd>Octo pr reload<cr>", desc = "Reload PR" },
+      { "<leader>gpr", "<cmd>Octo pr reload<cr>", desc = "PR: Reload" },
+      -- View PR diff in Diffview (alternative to Octo's built-in review)
+      {
+        "<leader>gpv",
+        function()
+          local base = vim.fn.system("gh pr view --json baseRefName -q .baseRefName 2>/dev/null")
+          base = vim.trim(base)
+          if vim.v.shell_error ~= 0 or base == "" then
+            vim.notify("Not on a PR branch", vim.log.levels.WARN)
+            return
+          end
+          vim.cmd("DiffviewOpen " .. base .. "...HEAD")
+        end,
+        desc = "PR: View Diff (Diffview)",
+      },
+
+      -- ============================================
+      -- Comments & Threads
+      -- ============================================
+      { "<leader>gpc", "<cmd>Octo comment add<cr>", desc = "PR: Add Comment" },
+      { "<leader>gpR", "<cmd>Octo thread resolve<cr>", desc = "PR: Resolve Thread" },
+      { "<leader>gpU", "<cmd>Octo thread unresolve<cr>", desc = "PR: Unresolve Thread" },
+
+      -- ============================================
+      -- Review Flow
+      -- ============================================
+      -- Start or resume review (tries resume first, falls back to start)
+      {
+        "<leader>gpt",
+        function()
+          -- Try to resume first, if it fails start a new review
+          local ok = pcall(vim.cmd, "Octo review resume")
+          if not ok then
+            vim.cmd("Octo review start")
+          end
+        end,
+        desc = "PR: Start/Resume Review",
+      },
+      { "<leader>gps", "<cmd>Octo review submit<cr>", desc = "PR: Submit Review" },
+      { "<leader>gpd", "<cmd>Octo review discard<cr>", desc = "PR: Discard Review" },
+
+      -- ============================================
+      -- Approval Actions
+      -- ============================================
+      { "<leader>gpa", "<cmd>Octo review submit approve<cr>", desc = "PR: Approve" },
+      { "<leader>gpx", "<cmd>Octo review submit request_changes<cr>", desc = "PR: Request Changes" },
     },
     config = function()
       require("octo").setup({

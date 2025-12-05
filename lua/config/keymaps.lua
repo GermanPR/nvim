@@ -40,8 +40,8 @@ map("v", "<leader>sg", function()
   })
 end, { noremap = true, silent = true, desc = "Grep selection (literal)" })
 
--- Jump forward (opposite of Ctrl-o) - Ctrl-j as Ctrl-i since terminal blocks Ctrl-i
-map("n", "<C-j>", "<C-i>", { noremap = true, silent = true, desc = "Jump forward in jump list" })
+-- Jump forward (opposite of Ctrl-o) - Ctrl-m as Ctrl-i since terminal blocks Ctrl-i
+map("n", "<C-m>", "<C-i>", { noremap = true, silent = true, desc = "Jump forward in jump list" })
 map("n", "<leader>j", ":join<CR>", { noremap = true, silent = true, desc = "Join lines" })
 
 -- Reload config (using <leader>R to avoid shadowing with <leader>r search/replace)

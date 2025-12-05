@@ -4,15 +4,16 @@ return {
     servers = {
       -- Ruff for linting and formatting (replaces ruff-lsp)
       ruff = {
+        root_markers = { ".venv", ".git", "pyproject.toml" },
         init_options = {
           settings = {
-            -- Use project's ruff configuration from pyproject.toml
             configurationPreference = "filesystemFirst",
           },
         },
       },
       -- Basedpyright for type checking
       basedpyright = {
+        root_markers = { ".venv", ".git", "pyproject.toml" },
         settings = {
           basedpyright = {
             -- Use pyproject.toml configuration
@@ -28,8 +29,6 @@ return {
               exclude = {
                 "**/node_modules",
                 "**/__pycache__",
-                "**/.venv",
-                "**/venv",
                 "**/.git",
               },
             },

@@ -34,7 +34,7 @@ return {
     "folke/snacks.nvim",
     keys = {
       {
-        "<leader>gD",
+        "<leader>gdb",
         function()
           -- Get list of all branches (local and remote)
           local branches = vim.fn.systemlist("git branch -a --format='%(refname:short)'")
@@ -80,7 +80,7 @@ return {
             end
           end)
         end,
-        desc = "Git Diff (select branch)",
+        desc = "Diff: vs Branch",
       },
     },
   },

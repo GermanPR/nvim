@@ -37,7 +37,9 @@ lua/
     ├── example.lua                        # Example plugin patterns (disabled)
     ├── lsp-hover.lua                      # LSP hover keybinding (gh)
     ├── harpoon.lua                        # File navigation marks system
-    ├── file-utils.lua                     # Gitsigns blame + file path utilities
+    ├── file-utils.lua                     # Gitsigns blame + file path utilities + branch diff
+    ├── git-diffview.lua                   # Diffview config (local git diffs, file history)
+    ├── octo.lua                           # GitHub PR management (list, review, comment, approve)
     ├── neo-tree.lua                       # File explorer configuration
     ├── disable-bufferline.lua             # Disable bufferline plugin
     ├── lualine.lua                        # Custom statusline (moved to tabline)
@@ -136,6 +138,30 @@ File utilities (from `lua/plugins/file-utils.lua`):
 - `<leader>fyr` → Yank relative file path
 - `<leader>fya` → Yank absolute file path
 - `<leader>fyn` → Yank filename only
+
+Git Diff keymaps - Diffview (from `lua/plugins/git-diffview.lua` and `file-utils.lua`):
+- `<leader>gdf` → File history (current file)
+- `<leader>gdl` → Line history (visual selection)
+- `<leader>gdb` → Diff vs branch (select branch)
+- `<leader>gdo` → Open diffview (working changes)
+- `<leader>gdq` → Close diffview
+
+PR Review keymaps - Octo (from `lua/plugins/octo.lua`):
+- `<leader>gpl` → List all PRs (Octo telescope)
+- `<leader>gpm` → My PRs (author @me)
+- `<leader>gpn` → PRs needing my review
+- `<leader>gpo` → Open current PR in Octo
+- `<leader>gpw` → Open PR in browser
+- `<leader>gpr` → Reload PR
+- `<leader>gpv` → View PR diff (Diffview) - alternative to Octo's built-in review
+- `<leader>gpc` → Add comment
+- `<leader>gpR` → Resolve thread
+- `<leader>gpU` → Unresolve thread
+- `<leader>gpt` → Start review (opens diff view with file panel)
+- `<leader>gps` → Submit review
+- `<leader>gpd` → Discard review
+- `<leader>gpa` → Approve PR
+- `<leader>gpx` → Request changes
 
 **Pattern**: Imports LazyVim's LSP keymap defaults, then extends/overrides.
 
