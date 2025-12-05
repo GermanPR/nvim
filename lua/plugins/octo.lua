@@ -62,6 +62,8 @@ return {
       -- ============================================
       -- PR Actions
       -- ============================================
+      -- Create a PR from the current branch
+      { "<leader>gpC", "<cmd>Octo pr create<cr>", desc = "PR: Create" },
       -- Open current branch's PR in Octo
       {
         "<leader>gpo",
