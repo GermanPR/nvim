@@ -76,7 +76,7 @@ return {
             if selected then
               -- Use diffview to show side-by-side diff against selected branch
               -- Using three-dot syntax to show only changes in current branch (like GitHub PRs)
-              vim.cmd("DiffviewOpen " .. selected .. "...HEAD")
+              vim.cmd("DiffviewOpen " .. selected .. "...HEAD --imply-local")
             end
           end)
         end,

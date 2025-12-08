@@ -153,6 +153,7 @@ PR Review keymaps - Octo (from `lua/plugins/octo.lua`):
 - `<leader>gpo` → Open current PR in Octo
 - `<leader>gpw` → Open PR in browser
 - `<leader>gpr` → Reload PR
+- `<leader>gpA` → Request reviewer (Snacks picker + `gh pr edit --add-reviewer`)
 - `<leader>gpv` → View PR diff (Diffview) - alternative to Octo's built-in review
 - `<leader>gpc` → Add comment
 - `<leader>gpR` → Resolve thread
